@@ -8,8 +8,14 @@ import os
 import httpx
 from mcp.server.fastmcp import FastMCP
 
+
+port = int(os.getenv("PORT", 8080))
 # Initialize the MCP Server
-mcp = FastMCP("PagerDuty-GCP")
+mcp = FastMCP(
+    "PagerDuty-GCP", 
+    host="0.0.0.0", 
+    port=port
+)
 
 PAGERDUTY_API_KEY = os.getenv("PAGERDUTY_API_KEY")
 PAGERDUTY_USER_EMAIL = os.getenv("PAGERDUTY_USER_EMAIL")
@@ -98,7 +104,7 @@ async def acknowledge_incident(incident_id: str) -> str:
 if __name__ == "__main__":
     # Use SSE transport for both local testing and Cloud Run deployment
     # Cloud Run injects the PORT environment variable (defaults to 8080)
-    port = int(os.getenv("PORT", 8080))
+    # port = int(os.getenv("PORT", 8080)
     host = "0.0.0.0" # Must bind to 0.0.0.0 for Docker/Cloud Run
     
     try:
