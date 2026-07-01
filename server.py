@@ -97,4 +97,15 @@ async def acknowledge_incident(incident_id: str) -> str:
 
 if __name__ == "__main__":
     # Use SSE transport for both local testing and Cloud Run deployment
-    mcp.run(transport="sse")
+    # Cloud Run injects the PORT environment variable (defaults to 8080)
+    port = int(os.getenv("PORT", 8080))
+    host = "0.0.0.0" # Must bind to 0.0.0.0 for Docker/Cloud Run
+    
+    try:
+        # For mcp Python SDK versions < 1.27
+        mcp.run(transport="sse", host=host, port=port)
+    except TypeError:
+        # For mcp Python SDK versions >= 1.27
+        mcp.settings.host = host
+        mcp.settings.port = port
+        mcp.run(transport="sse")

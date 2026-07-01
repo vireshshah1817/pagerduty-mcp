@@ -14,8 +14,8 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 RUN uv sync
 
-# Cloud Run injects the PORT environment variable
-EXPOSE $PORT
+# Optional: Hardcode to 8080 for local testing documentation (Cloud Run ignores EXPOSE)
+EXPOSE 8080
 
-# Start the server (adjust command based on your framework)
+# Start the server 
 CMD ["uv", "run", "server.py"]
